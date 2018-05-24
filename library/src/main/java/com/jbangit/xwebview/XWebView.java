@@ -29,7 +29,11 @@ public class XWebView extends WebView{
     @SuppressLint("JavascriptInterface")
     public void addEventHandler(JSBridgeHandler handler) {
         addJavascriptInterface(handler,handler.getName());
-        client.addJSCode(handler.getJSCode());
+        client.addHandler(handler);
+    }
+
+    public void removeEventHandler(JSBridgeHandler handler) {
+        client.removeHandler(handler);
     }
 
     @Override
@@ -59,7 +63,14 @@ public class XWebView extends WebView{
         webSettings.setDomStorageEnabled(true);
     }
 
-    public static void startFileChooser(Activity activity,int requestCode) {
+    @Override
+    public void destroy() {
+        client.removeHandlers();
+        client = null;
+        super.destroy();
+    }
+
+    public static void startFileChooser(Activity activity, int requestCode) {
         Intent i = new Intent(Intent.ACTION_GET_CONTENT);
         i.addCategory(Intent.CATEGORY_OPENABLE);
         i.setType("image/*");

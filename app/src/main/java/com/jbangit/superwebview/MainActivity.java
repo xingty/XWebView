@@ -1,6 +1,7 @@
 package com.jbangit.superwebview;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
@@ -13,6 +14,7 @@ import com.jbangit.xwebview.bridge.ImageEventHandler;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
+    private XWebView webView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,15 +22,17 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         String link = "http://jijian.jbangit.cn/app/news/5/detail_web";
-        XWebView webView = findViewById(R.id.webview);
+        webView = findViewById(R.id.webview);
         webView.initDefaultSettings();
         webView.setWebViewClient(new XWebViewClient());
-        webView.addEventHandler(new ImageEventHandler(this) {
+
+        final ImageEventHandler handler = new ImageEventHandler(this) {
             @Override
             public void onImageClick(List<String> urls, String url, int index) {
                 Toast.makeText(getApplicationContext(),url,Toast.LENGTH_LONG).show();
             }
-        });
+        };
+        webView.addEventHandler(handler);
         webView.addEventHandler(new DocumentBoundsEventHandler() {
             @Override
             public void onResize(int width, int height) {
@@ -37,5 +41,11 @@ public class MainActivity extends AppCompatActivity {
         });
         webView.setWebChromeClient(new XWebChromeClient());
         webView.loadUrl(link);
+    }
+
+    @Override
+    protected void onDestroy() {
+        webView.destroy();
+        super.onDestroy();
     }
 }

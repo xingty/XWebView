@@ -3,14 +3,18 @@ package com.jbangit.xwebview;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.text.TextUtils;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import com.jbangit.xwebview.bridge.JSBridgeHandler;
+
 import java.util.ArrayList;
 
 public class XWebViewClient extends WebViewClient{
-    private ArrayList<String> listOfJSCode = new ArrayList<>();
+    private ArrayList<JSBridgeHandler> handlers = new ArrayList<>();
+    private String jsCode;
 
     @Override
     public boolean shouldOverrideUrlLoading(WebView view, String url) {
@@ -53,28 +57,40 @@ public class XWebViewClient extends WebViewClient{
     @Override
     public void onPageFinished(WebView view, String url) {
         super.onPageFinished(view, url);
-        if (!listOfJSCode.isEmpty()) {
+        if (!handlers.isEmpty()) {
             executeJSCode(view);
         }
     }
 
     private void executeJSCode(WebView webView) {
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < listOfJSCode.size(); i++) {
-            sb.append(listOfJSCode.get(i));
-            sb.append("\n");
+        if (TextUtils.isEmpty(jsCode)) {
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < handlers.size(); i++) {
+                sb.append(handlers.get(i).getJSCode());
+                sb.append("\n");
+            }
+
+            String code = sb.toString();
+            jsCode = String.format("javascript:(function() { %s })();",code);
         }
 
-        String code = sb.toString();
-        String jsCode = String.format("javascript:(function() { %s })();",code);
         webView.loadUrl(jsCode);
     }
 
     /**
      * 添加Javascript代码
-     * @param code js code
+     * @param handler JSBridgeHandler
      */
-    public void addJSCode(String code) {
-        listOfJSCode.add(code);
+    public void addHandler(JSBridgeHandler handler) {
+        handlers.add(handler);
+    }
+
+    public void removeHandler(JSBridgeHandler handler) {
+        handlers.remove(handler);
+        jsCode = null;
+    }
+
+    public void removeHandlers() {
+        handlers.clear();
     }
 }
