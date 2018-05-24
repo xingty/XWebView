@@ -31,7 +31,6 @@ proguard/
 **/build/
 .gradle
 
-gradle
 **/.DS_Store
 
 .DS_Store
