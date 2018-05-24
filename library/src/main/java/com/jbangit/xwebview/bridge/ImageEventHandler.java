@@ -8,6 +8,10 @@ import com.jbangit.xwebview.utils.AssetsUtils;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * 监听WebView所有img标签点击事件,
+ * 把点击的url返回到本地onImageClick
+ */
 public abstract class ImageEventHandler implements JSBridgeHandler{
     private String jsCode;
 
@@ -35,5 +39,10 @@ public abstract class ImageEventHandler implements JSBridgeHandler{
         return jsCode;
     }
 
+    /**
+     * @param urls ArrayList<String>
+     * @param url String
+     * @param index index
+     */
     public abstract void onImageClick(List<String> urls, String url, int index);
 }

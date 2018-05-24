@@ -23,9 +23,9 @@ public class XWebViewClient extends WebViewClient{
 
     /**
      * 当点击了其他的URLSchema,在这里统一处理
-     * @param view
-     * @param url
-     * @return
+     * @param view WebView
+     * @param url String
+     * @return return true if consume
      */
     protected boolean processSchema(WebView view,String url) {
         if (url.startsWith("mqqwpa")) {
@@ -37,7 +37,7 @@ public class XWebViewClient extends WebViewClient{
         return false;
     }
 
-    private boolean openApp(Context context,String schema) {
+    protected boolean openApp(Context context,String schema) {
         try {
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(schema));
             context.startActivity(intent);
@@ -70,6 +70,10 @@ public class XWebViewClient extends WebViewClient{
         webView.loadUrl(jsCode);
     }
 
+    /**
+     * 添加Javascript代码
+     * @param code js code
+     */
     public void addJSCode(String code) {
         listOfJSCode.add(code);
     }
