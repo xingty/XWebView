@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.util.AttributeSet;
+import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -13,6 +14,7 @@ import com.jbangit.xwebview.bridge.JSBridgeHandler;
 
 public class XWebView extends WebView{
     private XWebViewClient client;
+    private XWebChromeClient webChromeClient;
 
     public XWebView(Context context) {
         super(context);
@@ -46,21 +48,9 @@ public class XWebView extends WebView{
         super.setWebViewClient(client);
     }
 
-    @SuppressLint("SetJavaScriptEnabled")
-    public void initDefaultSettings() {
-        WebView.setWebContentsDebuggingEnabled(true);
-        WebSettings webSettings = getSettings();
-        webSettings.setDefaultFontSize(16);
-        webSettings.setJavaScriptEnabled(true);
-        webSettings.setDisplayZoomControls(false);
-        webSettings.setUseWideViewPort(true);
-        webSettings.setDefaultTextEncodingName("UTF-8");
-        //自适应屏幕
-        webSettings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
-        webSettings.setLoadWithOverviewMode(true);
-        webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
-        webSettings.setCacheMode(WebSettings.LOAD_NO_CACHE);
-        webSettings.setDomStorageEnabled(true);
+    public void setWebChromeClient(XWebChromeClient client) {
+        this.webChromeClient = client;
+        super.setWebChromeClient(client);
     }
 
     @Override
@@ -68,6 +58,16 @@ public class XWebView extends WebView{
         client.removeHandlers();
         client = null;
         super.destroy();
+    }
+
+    /**
+     * 处理FileChooser返回的数据
+     * @param data Intent
+     */
+    public void processChooserCallback(Intent data) {
+        if (webChromeClient != null) {
+            webChromeClient.processCallback(data);
+        }
     }
 
     public static void startFileChooser(Activity activity, int requestCode) {

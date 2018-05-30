@@ -1,7 +1,6 @@
 package com.jbangit.superwebview;
 
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
@@ -23,7 +22,7 @@ public class MainActivity extends AppCompatActivity {
 
         String link = "http://jijian.jbangit.cn/app/news/5/detail_web";
         webView = findViewById(R.id.webview);
-        webView.initDefaultSettings();
+        WebViewUtils.initDefaultSettings(webView);
         webView.setWebViewClient(new XWebViewClient());
 
         final ImageEventHandler handler = new ImageEventHandler(this) {
