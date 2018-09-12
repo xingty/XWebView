@@ -64,4 +64,12 @@ public class XWebChromeClient extends WebChromeClient{
         filePathCallback.onReceiveValue(results);
         filePathCallback = null;
     }
+
+    public ValueCallback<Uri> getValueCallback() {
+        return valueCallback;
+    }
+
+    public ValueCallback<Uri[]> getFilePathCallback() {
+        return filePathCallback;
+    }
 }

@@ -43,3 +43,5 @@ webView.addEventHandler(new DocumentBoundsEventHandler() {
 # 自定义JSBridgeHandler
 
 你只需要实现JSBridgeHandler接口，然后编写自己的js代码即可。如果代码量较大，推荐放到assets/js目录，使用AssetUtils工具类加载js文件。
+
+# Li
